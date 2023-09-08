@@ -66,7 +66,7 @@ _El entorno de desarrollo utilizado fue Windows 10 Version 22H2 (OS Build 19045.
 
 ## Licencia 📄
 
-Este proyecto está bajo la GNU Affero General Public License v3.0 - mira el archivo [LICENSE](LICENSE) para detalles
+Este proyecto está bajo el MIT License - mira el archivo [LICENSE](LICENSE) para detalles
 
 ## Contribuyendo 🖇️
 
