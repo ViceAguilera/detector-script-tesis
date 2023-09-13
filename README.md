@@ -63,6 +63,7 @@ _El entorno de desarrollo utilizado fue Windows 10 Version 22H2 (OS Build 19045.
 ## Construido con 
 - [OpenCV](https://opencv.org/) - Librería de visión artificial
 - [Ultralytics](https://ultralytics.com/) - Librería de modelo de detección de objetos
+- [DepthAI](https://docs.luxonis.com/en/latest/) - Librería de cámara OAK-1 POE
 
 ## Licencia 📄
 
