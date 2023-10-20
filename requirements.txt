@@ -3,5 +3,7 @@ opencv-python==4.8.0.76
 depthai==2.22.0.0
 ultralytics==8.0.180
 easyocr==1.7.1
-Pillow==9.0.1
+Pillow==9.5.0
 filterpy==1.4.5
+python-dotenv-1.0.0
+

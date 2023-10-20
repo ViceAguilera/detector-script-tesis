@@ -20,7 +20,7 @@ xoutVideo.input.setQueueSize(1) # Set queue size
 
 camRgb.video.link(xoutVideo.input) # Link video
 
-model = YOLO('model/licence_plate.pt')
+model = YOLO('model/license_plate.pt')
 results = {}
 last_license_plate = None
 frame_nmr = 0

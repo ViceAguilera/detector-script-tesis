@@ -3,7 +3,10 @@ venv
 depthai-python
 model
 !model/.gitkeep
-test.py
+!photos/license_plate/.gitkeep
+!photos/vehicles/.gitkeep
+test_camera.py
+.env
 
 # Created by https://www.toptal.com/developers/gitignore/api/python
 # Edit at https://www.toptal.com/developers/gitignore?templates=python
