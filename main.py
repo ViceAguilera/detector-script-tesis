@@ -1,4 +1,7 @@
-#!/usr/bin/env python3
+
+from pathlib import Path
+import os
+import sys
 import cv2
 import depthai as dai
 from ultralytics import YOLO
@@ -19,6 +22,8 @@ xoutVideo.input.setBlocking(False) # Set blocking
 xoutVideo.input.setQueueSize(1) # Set queue size
 
 camRgb.video.link(xoutVideo.input) # Link video
+
+current_folder_path = Path(__file__).parent
 
 model = YOLO('model/license_plate.pt')
 results = {}

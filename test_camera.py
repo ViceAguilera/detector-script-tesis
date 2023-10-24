@@ -2,106 +2,14 @@
 Main script for processing license plate detection and recognition with OAK-1 POE.
 """
 import cv2
-import json
-import easyocr
-import requests
+import sys
 import depthai as dai
 from sort.sort import *
+from pathlib import Path
 from ultralytics import YOLO
-from dotenv import load_dotenv
-
-load_dotenv()
+from datetime import datetime
+from util import http_post, get_vehicles, read_license_plate, delete_files_in_directory, similarity_percentage
 mot_tracker = Sort()
-reader = easyocr.Reader(['en'], gpu=False)
-
-
-def http_post(score, img_name, text, direction):
-    """
-    Send a POST request to the API.
-
-    Args:
-        score (float): Confidence score of the license plate text.
-        img_name (str): Name of the image file.
-        text (str): License plate text.
-        direction (str): Direction of the vehicle.
-
-    Returns:
-        None
-    """
-    host = os.getenv("HOST")
-    port = os.getenv("PORT")
-
-    url = f"http://{host}:{port}/api/registers"
-
-    data = {
-        "license_plate": text,
-        "prediction_accuracy": score,
-        "direction": direction,
-        "vehicle_image": img_name,
-        "license_plate_image": "license_plate.jpg"
-    }
-
-    json_data = json.dumps(data)
-
-    headers = {'Content-Type': 'application/json'}
-
-    try:
-        with open(img_name, 'rb') as f:
-            files = {
-                'vehicle_image': (img_name, f),
-                'license_plate_image': ("license_plate.jpg", open("license_plate.jpg", 'rb'))
-            }
-            response = requests.post(url, data=json_data, headers=headers, files=files, timeout=10)
-
-        if response.status_code == 200:
-            print("The request was sent successfully.")
-        else:
-            print(response.status_code)
-            print("An error occurred while sending the request.")
-    except requests.exceptions.RequestException as e:
-        print(f"An error occurred during the HTTP POST request: {e}")
-
-
-def get_vehicles(license_plate, vehicles_ids):
-    """
-    Get the vehicles bounding boxes that are close to the license plate.
-
-    Args:
-        license_plate (list): List containing the license plate bounding box coordinates.
-        vehicles_ids (list): List containing the vehicles bounding box coordinates.
-
-    Returns:
-        tuple: Tuple containing the vehicles bounding box coordinates that are close to the license plate.
-    """
-    x1, y1, x2, y2, score, class_id = license_plate
-    for vehicle in vehicles_ids:
-        xvehi1, yvehi1, xvehi2, yvehi2, vehi_id = vehicle
-        if x1 >= xvehi1 and x2 <= xvehi2 and y1 >= yvehi1 and y2 <= yvehi2:
-            return vehicle
-    return -1, -1, -1, -1, -1
-
-
-def read_license_plate(license_plate_crop_thresh):
-    """
-       Read the license plate text from the given cropped image.
-
-       Args:
-           license_plate_crop_thresh (numpy.ndarray): Cropped image containing the license plate.
-
-       Returns:
-           tuple: Tuple containing the formatted license plate text and its confidence score.
-       """
-
-    detections = reader.readtext(license_plate_crop_thresh)
-
-    for detection in detections:
-        _, text, score = detection
-
-        text = text.upper().replace(' ', '')
-        if len(text) >= 6 and text.isalnum() and score >= 0.6 and not text.isalpha():
-            return text, score
-
-    return None, None
 
 
 def main():
@@ -124,6 +32,20 @@ def main():
     xoutVideo.input.setQueueSize(1)
 
     camRgb.video.link(xoutVideo.input)
+
+    current_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+    last_checked_hour = None
+
+    model_path = Path(__file__).parent / "model" / "yolov8n.pt"
+    license_plate_path = Path(__file__).parent / "model" / "best.pt"
+
+    nnPath = sys.argv[1] if len(sys.argv) > 1 else str(model_path)
+
+    if not Path(nnPath).exists():
+        raise FileNotFoundError(f'El modelo requerido no se encuentra en {nnPath}')
+
+    if not license_plate_path.exists():
+        raise FileNotFoundError(f'El modelo de placa de licencia no se encuentra en {license_plate_path}')
 
     coco_model = YOLO('model/yolov8n.pt')
     license_plate_model = YOLO('model/best.pt')
@@ -149,7 +71,7 @@ def main():
                 if int(class_id) in vehicles:
                     detections_.append([x1, y1, x2, y2, conf, class_id])
 
-            #vehicles_ids = mot_tracker.update(np.array(detections_))
+            vehicles_ids = mot_tracker.update(np.array(detections_))
             width = frame.shape[1]
             mid_width = width // 2
 
@@ -158,38 +80,59 @@ def main():
                 x1, y1, x2, y2, score, class_id = license_plate
                 cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 2)
                 print(score)
-                if score > 0.5:
+                if score >= 0.7:
                     if x1 < mid_width:
                         direction = "entrada"
                     else:
                         direction = "salida"
 
-                    print(direction)
+                    xvehi1, yvehi1, xvehi2, yvehi2, vehi_ids = get_vehicles(license_plate, vehicles_ids)
 
-                    #xvehi1, yvehi1, xvehi2, yvehi2, vehi_ids = get_vehicles(license_plate, vehicles_ids)
+                    vehicle_crop = frame[int(yvehi1):int(yvehi2), int(xvehi1):int(xvehi2), :]
 
                     license_plate_crop = frame[int(y1):int(y2), int(x1):int(x2), :]
                     license_plate_gray = cv2.cvtColor(license_plate_crop, cv2.COLOR_BGR2GRAY)
                     _, license_plate_crop_thresh = cv2.threshold(license_plate_gray, 0, 255,
                                                                  cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-                    print(license_plate_crop_thresh)
 
                     license_plate_text, license_plate_score = read_license_plate(license_plate_crop_thresh)
 
-                    cv2.imshow("license_plate_crop_thresh", license_plate_crop_thresh)
+                    vehicle_img_name = f"vehicle_{current_time}.jpg"
+                    cv2.imwrite(f"photos/vehicles/{vehicle_img_name}", vehicle_crop)
 
                     if license_plate_text is not None:
-                        if last_license_plate is not None and license_plate_text == last_license_plate:
-                            print("¡Same license plate as before detected!")
-                            continue
+                        if last_license_plate is not None and license_plate_text is not None:
+                            similarity = similarity_percentage(last_license_plate, license_plate_text)
+                            if similarity > 70:
+                                print("¡La patente actual es muy similar a la anterior! No se procesará.")
+                                continue
+                        results[frame_nmr][vehi_ids] = {'vehicle': {
+                            'bbox': [xvehi1, yvehi1, xvehi2, yvehi2], },
+                            'license_plate': {
+                                'bbox': [x1, y1, x2, y2],
+                                'text': license_plate_text,
+                                'bbox_score': score,
+                                'text_score': license_plate_score,
+                                'direction': direction
+                            }
+                        }
                         print("License plate:", license_plate_text)
                         print("Detected with", "{:.2f}".format(license_plate_score * 100), "% confidence")
                         last_license_plate = license_plate_text
 
-                        img_name = "license_plate_{}.jpg".format(frame_nmr)
-                        cv2.imwrite(img_name, license_plate_crop)
+                        license_plate_img_name = f"license_plate_{license_plate_text}_{current_time}.jpg"
+                        cv2.imwrite(f"photos/license_plate/{license_plate_img_name}", license_plate_crop)
 
-                        #http_post(license_plate_score, img_name, license_plate_text, direction)
+                        http_post(license_plate_score, license_plate_img_name, vehicle_img_name,
+                                  license_plate_text, direction)
+
+            current_hour = datetime.now().hour
+            current_minute = datetime.now().minute
+            if current_hour == 12 and current_minute == 5 and current_hour != last_checked_hour:
+                delete_files_in_directory("photos/license_plate")
+                delete_files_in_directory("photos/vehicles")
+                last_checked_hour = current_hour
+
             cv2.imshow("video", frame)
             if cv2.waitKey(1) == ord('q'):
                 break
