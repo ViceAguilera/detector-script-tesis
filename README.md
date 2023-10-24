@@ -52,9 +52,10 @@ _Sistema de reconocimiento automático de matrículas vehiculares y API para el 
     ```
 
 8. Para el envio de datos se debe crear archivo .env, siguiendo el ejemplo de `.env.example`
-  
 
-9. Se ejecuta el script
+9. Se descarga los modelos de [Yolov8n](https://drive.google.com/file/d/192QNeCFvm4U-vIagpz0ch6JWcYaOEhG2/view?usp=sharing) y [License Plate](https://drive.google.com/file/d/15urX7tBdBMS8U-yiwdZS0SEx8xvJwKc8/view?usp=sharing) y se agregan a la carpeta `models`
+
+10. Se ejecuta el script
     ```bash
     python3.9 main.py
     ```
