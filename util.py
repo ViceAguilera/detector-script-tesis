@@ -3,6 +3,7 @@ Module containing utility functions.
 """
 import json
 import base64
+import string
 import shutil
 import easyocr
 import requests
@@ -12,6 +13,34 @@ from dotenv import load_dotenv
 load_dotenv()
 mot_tracker = Sort()
 reader = easyocr.Reader(['en'], gpu=False)
+
+dict_char_to_int = {'O': '0', 'I': '1', 'Z': '2', 'E': '3', 'A': '4', 'S': '5', 'G': '6', 'T': '7', 'B': '8', 'Q': '9'}
+dict_int_to_char = {v: k for k, v in dict_char_to_int.items()}
+
+
+def verify_api_connection():
+    """
+    send a GET request to the API.
+
+    Returns:
+        Status: True if the request was sent successfully, False otherwise.
+    """
+    host = os.getenv("HOST")
+    port = os.getenv("PORT")
+
+    url = f"http://{host}:{port}/api/status"
+
+    try:
+        response = requests.get(url, timeout=10)
+
+        if response.status_code == 200:
+            print("The request was sent successfully.")
+            return True
+        else:
+            return False
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred during the HTTP GET request: {e}")
+        return False
 
 
 def http_post(score, license_img_name, vehicle_img_name, text, direction):
@@ -73,31 +102,59 @@ def get_vehicles(license_plate, vehicles_ids):
         tuple: Tuple containing the vehicles bounding box coordinates that are close to the license plate.
     """
     x1, y1, x2, y2, score, class_id = license_plate
+
     for vehicle in vehicles_ids:
         xvehi1, yvehi1, xvehi2, yvehi2, vehi_id = vehicle
         if x1 >= xvehi1 and x2 <= xvehi2 and y1 >= yvehi1 and y2 <= yvehi2:
             return vehicle
+
     return -1, -1, -1, -1, -1
 
 
-def read_license_plate(license_plate_crop_thresh):
+def verify_license_plate(text):
+    """
+       Check if the license plate text complies with the required format for Chilean plates.
+
+       Args:
+           text (str): License plate text.
+
+       Returns:
+           bool: True if the license plate complies with the format, False otherwise.
+       """
+    if len(text) != 6:
+        return False
+
+    if not all(char in string.ascii_uppercase or char in dict_int_to_char for char in text[:2]):
+        return False
+
+    if not all(char.isdigit() or char in dict_char_to_int for char in text[2:4]):
+        return False
+
+    if not all(char in string.ascii_uppercase or char in dict_int_to_char for char in text[4:]):
+        return False
+
+    return True
+
+
+def read_license_plate(license_plate_crop):
     """
     Read the license plate text from the given cropped image.
 
     Args:
-        license_plate_crop_thresh (numpy.ndarray): Cropped image containing the license plate.
+        license_plate_crop (PIL.Image.Image): Cropped image containing the license plate.
 
     Returns:
         tuple: Tuple containing the formatted license plate text and its confidence score.
     """
 
-    detections = reader.readtext(license_plate_crop_thresh)
+    detections = reader.readtext(license_plate_crop)
 
     for detection in detections:
-        _, text, score = detection
-
+        bbox, text, score = detection
         text = text.upper().replace(' ', '')
-        if text.isalnum() and score >= 0.5 and not text.isalpha():
+        text = ''.join([char for char in text if char.isalnum()])
+
+        if verify_license_plate(text):
             return text, score
 
     return None, None
