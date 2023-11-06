@@ -7,7 +7,16 @@ from sort.sort import *
 from pathlib import Path
 from ultralytics import YOLO
 from datetime import datetime
-from util import http_post, get_vehicles, read_license_plate, delete_files_in_directory, similarity_percentage
+
+from util import (
+    http_post,
+    get_vehicles,
+    read_license_plate,
+    delete_files_in_directory,
+    similarity_percentage,
+    verify_api_connection
+)
+
 mot_tracker = Sort()
 
 
@@ -15,6 +24,11 @@ def main():
     """
     Main function of the script.
     """
+
+    if verify_api_connection() is False:
+        print("No hay conexión con la API")
+        return
+
     cap = cv2.VideoCapture("video.mp4")
     current_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
     last_checked_hour = None
@@ -59,7 +73,6 @@ def main():
         for license_plate in license_plates.boxes.data.tolist():
             x1, y1, x2, y2, score, class_id = license_plate
             cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 2)
-            print(score)
             if score >= 0.7:
                 if x1 < mid_width:
                     direction = "entrada"
@@ -72,10 +85,8 @@ def main():
 
                 license_plate_crop = frame[int(y1):int(y2), int(x1):int(x2), :]
                 license_plate_gray = cv2.cvtColor(license_plate_crop, cv2.COLOR_BGR2GRAY)
-                _, license_plate_crop_thresh = cv2.threshold(license_plate_gray, 0, 255,
-                                                             cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
-                license_plate_text, license_plate_score = read_license_plate(license_plate_crop_thresh)
+                license_plate_text, license_plate_score = read_license_plate(license_plate_gray)
 
                 vehicle_img_name = f"vehicle_{current_time}.jpg"
                 cv2.imwrite(f"photos/vehicles/{vehicle_img_name}", vehicle_crop)
