@@ -127,13 +127,46 @@ def verify_license_plate(text):
     if not all(char in string.ascii_uppercase or char in dict_int_to_char for char in text[:2]):
         return False
 
-    if not all(char.isdigit() or char in dict_char_to_int for char in text[2:4]):
-        return False
+    if text[2].isalpha():
+        if not text[3].isalpha():
+            return False
+    else:
+        if not text[3].isdigit():
+            return False
 
     if not all(char in string.ascii_uppercase or char in dict_int_to_char for char in text[4:]):
         return False
 
     return True
+
+
+def format_license(text):
+    """
+    Format the license plate text by converting characters using the mapping dictionaries.
+
+    Args:
+        text (str): License plate text.
+
+    Returns:
+        str: Formatted license plate text.
+    """
+
+    formatted_text = ""
+
+    for i in range(2):
+        formatted_text += dict_int_to_char.get(text[i], text[i])
+
+    if text[2].isdigit():
+        for i in range(2, 4):
+            formatted_text += text[i]
+    else:
+        for i in range(2, 4):
+            formatted_text += dict_int_to_char.get(text[i], text[i])
+
+    for i in range(4, 6):
+        formatted_text += dict_char_to_int.get(text[i], text[i])
+
+    return formatted_text
 
 
 def read_license_plate(license_plate_crop):
@@ -154,7 +187,8 @@ def read_license_plate(license_plate_crop):
         text = text.upper().replace(' ', '')
         text = ''.join([char for char in text if char.isalnum()])
 
-        if verify_license_plate(text):
+        if verify_license_plate(text) and score >= 0.4:
+            text = format_license(text)
             return text, score
 
     return None, None

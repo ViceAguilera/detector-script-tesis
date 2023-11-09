@@ -86,6 +86,7 @@ def main():
                     detections_.append([x1, y1, x2, y2, conf, class_id])
 
             vehicles_ids = mot_tracker.update(np.array(detections_))
+
             width = frame.shape[1]
             mid_width = width // 2
 
@@ -104,12 +105,12 @@ def main():
                     vehicle_crop = frame[int(yvehi1):int(yvehi2), int(xvehi1):int(xvehi2), :]
 
                     license_plate_crop = frame[int(y1):int(y2), int(x1):int(x2), :]
+                    cv2.imshow("Licencia", license_plate_crop)
                     license_plate_gray = cv2.cvtColor(license_plate_crop, cv2.COLOR_BGR2GRAY)
 
                     license_plate_text, license_plate_score = read_license_plate(license_plate_gray)
 
                     vehicle_img_name = f"vehicle_{current_time}.jpg"
-                    cv2.imwrite(f"photos/vehicles/{vehicle_img_name}", vehicle_crop)
 
                     if license_plate_text is not None:
                         if last_license_plate is not None and license_plate_text is not None:
@@ -117,6 +118,7 @@ def main():
                             if similarity > 70:
                                 print("¡La patente actual es muy similar a la anterior! No se procesará.")
                                 continue
+                        cv2.imwrite(f"photos/vehicles/{vehicle_img_name}", vehicle_crop)
                         results[frame_nmr][vehi_ids] = {'vehicle': {
                             'bbox': [xvehi1, yvehi1, xvehi2, yvehi2], },
                             'license_plate': {
