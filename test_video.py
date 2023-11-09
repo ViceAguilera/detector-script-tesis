@@ -25,9 +25,9 @@ def main():
     Main function of the script.
     """
 
-    """if verify_api_connection() is False:
+    if verify_api_connection() is False:
         print("No hay conexión con la API")
-        return"""
+        return
 
     cap = cv2.VideoCapture("video.mp4")
     current_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
@@ -84,6 +84,7 @@ def main():
                 vehicle_crop = frame[int(yvehi1):int(yvehi2), int(xvehi1):int(xvehi2), :]
 
                 license_plate_crop = frame[int(y1):int(y2), int(x1):int(x2), :]
+                cv2.imshow("license_plate_crop", license_plate_crop)
                 license_plate_gray = cv2.cvtColor(license_plate_crop, cv2.COLOR_BGR2GRAY)
 
                 license_plate_text, license_plate_score = read_license_plate(license_plate_gray)

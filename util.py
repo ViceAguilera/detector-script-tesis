@@ -34,7 +34,6 @@ def verify_api_connection():
         response = requests.get(url, timeout=10)
 
         if response.status_code == 200:
-            print("The request was sent successfully.")
             return True
         else:
             return False

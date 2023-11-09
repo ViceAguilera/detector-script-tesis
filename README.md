@@ -16,6 +16,9 @@ _Sistema de reconocimiento automático de matrículas vehiculares y API para el 
 
 ### Instalacion  🔧
 
+<details>
+   <summary>Linux</summary>
+
 1. Se debe instalar venv
     ```bash
     sudo apt-get install python3.9-venv
@@ -50,15 +53,73 @@ _Sistema de reconocimiento automático de matrículas vehiculares y API para el 
     ```bash
     pip install -r requirements.txt
     ```
+   
+8. Se desinstala pytorch
+    ```bash
+    pip uninstall -y torch torchvision torchaudio
+    ```
+
+8. Se instala CUDA Pytorch
+    ```bash
+   pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+   ```
+
+9. Para el envio de datos se debe crear archivo .env, siguiendo el ejemplo de `.env.example`
+
+10. Se descarga los modelos de [Yolov8n](https://drive.google.com/file/d/192QNeCFvm4U-vIagpz0ch6JWcYaOEhG2/view?usp=sharing) y [License Plate](https://drive.google.com/file/d/15urX7tBdBMS8U-yiwdZS0SEx8xvJwKc8/view?usp=sharing) y se agregan a la carpeta `model`
+
+11. Se ejecuta el script
+    ```bash
+    python3.9 main.py
+    ```
+</details>
+
+<details>
+  <summary>Windows</summary>
+
+1. Se clona el repositorio de GitHub
+    ```bash
+    git clone https://github.com/ViceAguilera/detector-script-tesis.git detector-script
+    ```
+  
+2. Se ingresa a la carpeta del proyecto
+    ```bash
+    cd detector-script
+    ```
+  
+3. Se crea un entorno virtual
+    ```bash
+    python -m venv venv
+    ```
+    
+4. Se activa el entorno virtual
+    ```bash
+    .\venv\bin\activate
+    ```
+   
+5. Se instala los requerimientos del proyecto
+    ```bash
+    pip install -r requirements.txt
+    ```
+6. Se desinstala pytorch
+    ```bash
+    pip uninstall -y torch torchvision torchaudio
+    ```
+
+7. Se instala CUDA Pytorch
+    ```bash
+   pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+   ```
 
 8. Para el envio de datos se debe crear archivo .env, siguiendo el ejemplo de `.env.example`
 
-9. Se descarga los modelos de [Yolov8n](https://drive.google.com/file/d/192QNeCFvm4U-vIagpz0ch6JWcYaOEhG2/view?usp=sharing) y [License Plate](https://drive.google.com/file/d/15urX7tBdBMS8U-yiwdZS0SEx8xvJwKc8/view?usp=sharing) y se agregan a la carpeta `models`
+9. Se descarga los modelos de [Yolov8n](https://drive.google.com/file/d/192QNeCFvm4U-vIagpz0ch6JWcYaOEhG2/view?usp=sharing) y [License Plate](https://drive.google.com/file/d/15urX7tBdBMS8U-yiwdZS0SEx8xvJwKc8/view?usp=sharing) y se agregan a la carpeta `model`
 
 10. Se ejecuta el script
     ```bash
     python3.9 main.py
     ```
+</details>
    
 ## Licencia 📄
 
