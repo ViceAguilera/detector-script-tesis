@@ -81,10 +81,7 @@ def http_post(score, license_img_name, vehicle_img_name, text, direction):
         response = requests.post(url, data=json_data, headers=headers, timeout=10)
 
         if response.status_code == 200:
-            print("The request was sent successfully.")
-        else:
-            print(response.status_code)
-            print("An error occurred while sending the request.")
+            print("¡Registro enviado exitosamente!")
     except requests.exceptions.RequestException as e:
         print(f"An error occurred during the HTTP POST request: {e}")
 
@@ -225,6 +222,16 @@ def delete_files_in_directory(directory_path):
 
 
 def similarity_percentage(str1, str2):
+    """
+    Calculate the similarity percentage between two strings.
+
+    Args:
+        str1 (str): First string.
+        str2 (str): Second string.
+
+    Returns:
+        float: Similarity percentage between the two strings.
+    """
     str1_set = set(str1)
     str2_set = set(str2)
 

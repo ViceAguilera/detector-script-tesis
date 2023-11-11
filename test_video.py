@@ -25,11 +25,11 @@ def main():
     Main function of the script.
     """
 
-    if verify_api_connection() is False:
+    '''if verify_api_connection() is False:
         print("No hay conexión con la API")
-        return
+        return'''
 
-    cap = cv2.VideoCapture("video.mp4")
+    cap = cv2.VideoCapture("video2.mp4")
     current_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
     last_checked_hour = None
 
@@ -88,17 +88,15 @@ def main():
                 license_plate_gray = cv2.cvtColor(license_plate_crop, cv2.COLOR_BGR2GRAY)
 
                 license_plate_text, license_plate_score = read_license_plate(license_plate_gray)
-                print("License plate:", license_plate_text, "Score:", license_plate_score)
-
-                vehicle_img_name = f"vehicle_{current_time}.jpg"
 
                 if license_plate_text is not None:
                     if last_license_plate is not None and license_plate_text is not None:
                         similarity = similarity_percentage(last_license_plate, license_plate_text)
-                        if similarity > 70:
+                        print("Similarity:", similarity)
+                        if license_plate_text == last_license_plate or similarity > 66:
                             print("¡La patente actual es muy similar a la anterior! No se procesará.")
                             continue
-                    cv2.imwrite(f"photos/vehicles/{vehicle_img_name}", vehicle_crop)
+
                     results[frame_nmr][vehi_ids] = {'vehicle': {
                         'bbox': [xvehi1, yvehi1, xvehi2, yvehi2], },
                         'license_plate': {
@@ -109,9 +107,11 @@ def main():
                             'direction': direction
                         }
                     }
-                    print("License plate:", license_plate_text)
-                    print("Detected with", "{:.2f}".format(license_plate_score * 100), "% confidence")
+
                     last_license_plate = license_plate_text
+
+                    vehicle_img_name = f"vehicle_{license_plate_text}_{current_time}.jpg"
+                    cv2.imwrite(f"photos/vehicles/{vehicle_img_name}", vehicle_crop)
 
                     license_plate_img_name = f"license_plate_{license_plate_text}_{current_time}.jpg"
                     cv2.imwrite(f"photos/license_plate/{license_plate_img_name}", license_plate_crop)

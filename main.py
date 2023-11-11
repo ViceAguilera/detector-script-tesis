@@ -105,20 +105,19 @@ def main():
                     vehicle_crop = frame[int(yvehi1):int(yvehi2), int(xvehi1):int(xvehi2), :]
 
                     license_plate_crop = frame[int(y1):int(y2), int(x1):int(x2), :]
-                    cv2.imshow("Licencia", license_plate_crop)
+                    cv2.imshow("license_plate_crop", license_plate_crop)
                     license_plate_gray = cv2.cvtColor(license_plate_crop, cv2.COLOR_BGR2GRAY)
 
                     license_plate_text, license_plate_score = read_license_plate(license_plate_gray)
 
-                    vehicle_img_name = f"vehicle_{current_time}.jpg"
-
                     if license_plate_text is not None:
                         if last_license_plate is not None and license_plate_text is not None:
                             similarity = similarity_percentage(last_license_plate, license_plate_text)
-                            if similarity > 70:
+                            print("Similarity:", similarity)
+                            if license_plate_text == last_license_plate or similarity > 66:
                                 print("¡La patente actual es muy similar a la anterior! No se procesará.")
                                 continue
-                        cv2.imwrite(f"photos/vehicles/{vehicle_img_name}", vehicle_crop)
+
                         results[frame_nmr][vehi_ids] = {'vehicle': {
                             'bbox': [xvehi1, yvehi1, xvehi2, yvehi2], },
                             'license_plate': {
@@ -129,9 +128,11 @@ def main():
                                 'direction': direction
                             }
                         }
-                        print("License plate:", license_plate_text)
-                        print("Detected with", "{:.2f}".format(license_plate_score * 100), "% confidence")
+
                         last_license_plate = license_plate_text
+
+                        vehicle_img_name = f"vehicle_{license_plate_text}_{current_time}.jpg"
+                        cv2.imwrite(f"photos/vehicles/{vehicle_img_name}", vehicle_crop)
 
                         license_plate_img_name = f"license_plate_{license_plate_text}_{current_time}.jpg"
                         cv2.imwrite(f"photos/license_plate/{license_plate_img_name}", license_plate_crop)
