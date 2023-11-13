@@ -47,7 +47,7 @@ def main():
     coco_model = YOLO('model/yolov8n.pt')
     license_plate_model = YOLO('model/best.pt')
 
-    vehicles = [2, 5, 6, 7]
+    vehicles = [2, 6, 7]
     results = {}
     last_license_plate = None
     frame_nmr = 0
@@ -91,7 +91,6 @@ def main():
                 if license_plate_text is not None:
                     if last_license_plate is not None and license_plate_text is not None:
                         similarity = similarity_percentage(last_license_plate, license_plate_text)
-                        print("Similarity:", similarity)
                         if license_plate_text == last_license_plate or similarity > 66:
                             print("¡La patente actual es muy similar a la anterior! No se procesará.")
                             continue
@@ -114,10 +113,9 @@ def main():
                     cv2.imwrite(f"photos/vehicles/{vehicle_img_name}", vehicle_crop)
 
                     license_plate_img_name = f"license_plate_{license_plate_text}_{current_time}.jpg"
-                    license_plate_crop = cv2.resize(license_plate_crop, (0, 0), fx=0.5, fy=0.5)
+                    license_plate_crop = cv2.resize(license_plate_crop, (0, 0), fx=0.7, fy=0.7)
                     cv2.imwrite(f"photos/license_plate/{license_plate_img_name}", license_plate_crop)
 
-                    print(license_plate_text, license_plate_score, direction, vehicle_img_name, license_plate_img_name)
                     http_post(license_plate_score, license_plate_img_name, vehicle_img_name,
                               license_plate_text, direction)
 
