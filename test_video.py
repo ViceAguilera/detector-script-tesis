@@ -25,9 +25,9 @@ def main():
     Main function of the script.
     """
 
-    '''if verify_api_connection() is False:
+    if verify_api_connection() is False:
         print("No hay conexión con la API")
-        return'''
+        return
 
     cap = cv2.VideoCapture("video2.mp4")
     current_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
@@ -75,16 +75,15 @@ def main():
             cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 2)
             if score >= 0.7:
                 if x1 < mid_width:
-                    direction = "entrada"
+                    direction = "Entrada"
                 else:
-                    direction = "salida"
+                    direction = "Salida"
 
                 xvehi1, yvehi1, xvehi2, yvehi2, vehi_ids = get_vehicles(license_plate, vehicles_ids)
 
                 vehicle_crop = frame[int(yvehi1):int(yvehi2), int(xvehi1):int(xvehi2), :]
 
                 license_plate_crop = frame[int(y1):int(y2), int(x1):int(x2), :]
-                cv2.imshow("license_plate_crop", license_plate_crop)
                 license_plate_gray = cv2.cvtColor(license_plate_crop, cv2.COLOR_BGR2GRAY)
 
                 license_plate_text, license_plate_score = read_license_plate(license_plate_gray)
@@ -111,11 +110,14 @@ def main():
                     last_license_plate = license_plate_text
 
                     vehicle_img_name = f"vehicle_{license_plate_text}_{current_time}.jpg"
+                    vehicle_crop = cv2.resize(vehicle_crop, (0, 0), fx=0.5, fy=0.5)
                     cv2.imwrite(f"photos/vehicles/{vehicle_img_name}", vehicle_crop)
 
                     license_plate_img_name = f"license_plate_{license_plate_text}_{current_time}.jpg"
+                    license_plate_crop = cv2.resize(license_plate_crop, (0, 0), fx=0.5, fy=0.5)
                     cv2.imwrite(f"photos/license_plate/{license_plate_img_name}", license_plate_crop)
 
+                    print(license_plate_text, license_plate_score, direction, vehicle_img_name, license_plate_img_name)
                     http_post(license_plate_score, license_plate_img_name, vehicle_img_name,
                               license_plate_text, direction)
 

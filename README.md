@@ -66,9 +66,11 @@ _Sistema de reconocimiento automático de matrículas vehiculares y API para el 
 
 9. Para el envio de datos se debe crear archivo .env, siguiendo el ejemplo de `.env.example`
 
-10. Se descarga los modelos de [Yolov8n](https://drive.google.com/file/d/192QNeCFvm4U-vIagpz0ch6JWcYaOEhG2/view?usp=sharing) y [License Plate](https://drive.google.com/file/d/15urX7tBdBMS8U-yiwdZS0SEx8xvJwKc8/view?usp=sharing) y se agregan a la carpeta `model`
+10. Se solicita el token de la [API](https://github.com/camjasaez/app-tesis.git) y se agrega al archivo `.env`
 
-11. Se ejecuta el script
+11. Se descarga los modelos de [Yolov8n](https://drive.google.com/file/d/192QNeCFvm4U-vIagpz0ch6JWcYaOEhG2/view?usp=sharing) y [License Plate](https://drive.google.com/file/d/15urX7tBdBMS8U-yiwdZS0SEx8xvJwKc8/view?usp=sharing) y se agregan a la carpeta `model`
+
+12. Se ejecuta el script
     ```bash
     python3.9 main.py
     ```
@@ -94,7 +96,7 @@ _Sistema de reconocimiento automático de matrículas vehiculares y API para el 
     
 4. Se activa el entorno virtual
     ```bash
-    .\venv\bin\activate
+    ./venv/Scripts/activate
     ```
    
 5. Se instala los requerimientos del proyecto
@@ -113,11 +115,13 @@ _Sistema de reconocimiento automático de matrículas vehiculares y API para el 
 
 8. Para el envio de datos se debe crear archivo .env, siguiendo el ejemplo de `.env.example`
 
-9. Se descarga los modelos de [Yolov8n](https://drive.google.com/file/d/192QNeCFvm4U-vIagpz0ch6JWcYaOEhG2/view?usp=sharing) y [License Plate](https://drive.google.com/file/d/15urX7tBdBMS8U-yiwdZS0SEx8xvJwKc8/view?usp=sharing) y se agregan a la carpeta `model`
+10. Se solicita el token de la [API](https://github.com/camjasaez/app-tesis.git) y se agrega al archivo `.env`
 
-10. Se ejecuta el script
+11. Se descarga los modelos de [Yolov8n](https://drive.google.com/file/d/192QNeCFvm4U-vIagpz0ch6JWcYaOEhG2/view?usp=sharing) y [License Plate](https://drive.google.com/file/d/1jnWNCFfGbEt28cYrH8P74t2FguwCD3vP/view?usp=sharing) y se agregan a la carpeta `model`
+
+12. Se ejecuta el script
     ```bash
-    python3.9 main.py
+    python main.py
     ```
 </details>
    

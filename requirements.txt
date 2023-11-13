@@ -1,7 +1,7 @@
 numpy==1.25.2
-opencv-python==4.8.0.76
+opencv-python=4.8.1.78
 depthai==2.22.0.0
-ultralytics==8.0.18
+ultralytics==8.0.208
 easyocr==1.7.1
 Pillow==9.5.0
 filterpy==1.4.5

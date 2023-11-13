@@ -14,7 +14,8 @@ load_dotenv()
 mot_tracker = Sort()
 reader = easyocr.Reader(['en'], gpu=False)
 
-dict_char_to_int = {'O': '0', 'I': '1', 'Z': '2', 'E': '3', 'A': '4', 'S': '5', 'G': '6', 'T': '7', 'B': '8', 'Q': '9'}
+dict_char_to_int = {'O': '0', 'I': '1', 'Z': '2', 'E': '3', 'A': '4',
+                    'S': '5', 'G': '6', 'T': '7', 'B': '8', 'Q': '9', 'C': '0'}
 dict_int_to_char = {v: k for k, v in dict_char_to_int.items()}
 
 
@@ -58,6 +59,7 @@ def http_post(score, license_img_name, vehicle_img_name, text, direction):
     """
     host = os.getenv("HOST")
     port = os.getenv("PORT")
+    token = os.getenv("TOKEN")
 
     url = f"http://{host}:{port}/api/registers"
     vehicle_image_encoded = encode_image_to_base64("photos/vehicles/" + vehicle_img_name)
@@ -75,7 +77,7 @@ def http_post(score, license_img_name, vehicle_img_name, text, direction):
 
     json_data = json.dumps(data)
 
-    headers = {'Content-Type': 'application/json'}
+    headers = {'Content-Type': 'application/json', 'authorization': 'Bearer ' + token}
 
     try:
         response = requests.post(url, data=json_data, headers=headers, timeout=10)
@@ -101,8 +103,9 @@ def get_vehicles(license_plate, vehicles_ids):
 
     for vehicle in vehicles_ids:
         xvehi1, yvehi1, xvehi2, yvehi2, vehi_id = vehicle
-        if x1 >= xvehi1 and x2 <= xvehi2 and y1 >= yvehi1 and y2 <= yvehi2:
-            return vehicle
+
+        if xvehi1 <= x1 <= xvehi2 and yvehi1 <= y1 <= yvehi2:
+            return xvehi1, yvehi1, xvehi2, yvehi2, vehi_id
 
     return -1, -1, -1, -1, -1
 
@@ -202,7 +205,6 @@ def encode_image_to_base64(image_path):
     """
     with open(image_path, 'rb') as image_file:
         encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
-    print(encoded_string)
     return encoded_string
 
 
