@@ -83,7 +83,9 @@ def http_post(score, license_img_name, vehicle_img_name, text, direction):
         response = requests.post(url, data=json_data, headers=headers, timeout=10)
 
         if response.status_code == 200:
-            print("¡Registro enviado exitosamente!")
+            print("¡Registro exitoso!")
+        else:
+            print(f"An error occurred during the HTTP POST request: {response.status_code}")
     except requests.exceptions.RequestException as e:
         print(f"An error occurred during the HTTP POST request: {e}")
 
