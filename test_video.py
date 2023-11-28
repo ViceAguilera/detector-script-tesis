@@ -45,9 +45,9 @@ def main():
         raise FileNotFoundError(f'El modelo de placa de licencia no se encuentra en {license_plate_path}')
 
     coco_model = YOLO('model/yolov8n.pt')
-    license_plate_model = YOLO('model/best.pt')
+    license_plate_model = YOLO('model/best 1.pt')
 
-    vehicles = [2, 6, 7]
+    vehicles = [2, 7]
     results = {}
     last_license_plate = None
     frame_nmr = 0
@@ -73,7 +73,7 @@ def main():
         for license_plate in license_plates.boxes.data.tolist():
             x1, y1, x2, y2, score, class_id = license_plate
             cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 2)
-            if score >= 0.7:
+            if score >= 0.75:
                 if x1 < mid_width:
                     direction = "Entrada"
                 else:
@@ -88,7 +88,7 @@ def main():
 
                 license_plate_text, license_plate_score = read_license_plate(license_plate_gray)
 
-                if license_plate_text is not None:
+                if license_plate_text is not None and vehicle_crop.size > 0:
                     if last_license_plate is not None and license_plate_text is not None:
                         similarity = similarity_percentage(last_license_plate, license_plate_text)
                         if license_plate_text == last_license_plate or similarity > 66:
@@ -117,7 +117,7 @@ def main():
                     cv2.imwrite(f"photos/license_plate/{license_plate_img_name}", license_plate_crop)
 
                     http_post(license_plate_score, license_plate_img_name, vehicle_img_name,
-                              license_plate_text, direction)
+                               license_plate_text, direction)
 
         current_hour = datetime.now().hour
         current_minute = datetime.now().minute
