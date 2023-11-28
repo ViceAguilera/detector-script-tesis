@@ -73,8 +73,6 @@ def http_post(score, license_img_name, vehicle_img_name, text, direction):
         "licensePlateImage": license_plate_image_encoded
     }
 
-    print(data)
-
     json_data = json.dumps(data)
 
     headers = {'Content-Type': 'application/json', 'authorization': 'Bearer ' + token}
