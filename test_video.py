@@ -45,7 +45,8 @@ def main():
         raise FileNotFoundError(f'El modelo de placa de licencia no se encuentra en {license_plate_path}')
 
     coco_model = YOLO('model/yolov8n.pt')
-    license_plate_model = YOLO('model/best 1.pt')
+
+    license_plate_model = YOLO('model/tercer entrenamiento.pt')
 
     vehicles = [2, 7]
     results = {}
@@ -74,11 +75,6 @@ def main():
             x1, y1, x2, y2, score, class_id = license_plate
             cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 2)
             if score >= 0.75:
-                if x1 < mid_width:
-                    direction = "Entrada"
-                else:
-                    direction = "Salida"
-
                 xvehi1, yvehi1, xvehi2, yvehi2, vehi_ids = get_vehicles(license_plate, vehicles_ids)
 
                 vehicle_crop = frame[int(yvehi1):int(yvehi2), int(xvehi1):int(xvehi2), :]
@@ -88,6 +84,11 @@ def main():
 
                 license_plate_text, license_plate_score = read_license_plate(license_plate_gray)
 
+                if x1 < mid_width:
+                    direction = "Entrada"
+                else:
+                    direction = "Salida"
+                    
                 if license_plate_text is not None and vehicle_crop.size > 0:
                     if last_license_plate is not None and license_plate_text is not None:
                         similarity = similarity_percentage(last_license_plate, license_plate_text)
@@ -126,6 +127,7 @@ def main():
             delete_files_in_directory("photos/vehicles")
             last_checked_hour = current_hour
 
+        frame = cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
         cv2.imshow("video", frame)
         if cv2.waitKey(1) == ord('q'):
             break
