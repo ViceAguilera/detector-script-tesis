@@ -45,6 +45,7 @@ def main():
         raise FileNotFoundError(f'El modelo de placa de licencia no se encuentra en {license_plate_path}')
 
     coco_model = YOLO('model/yolov8n.pt')
+
     license_plate_model = YOLO('model/tercer entrenamiento.pt')
 
     vehicles = [2, 7]
@@ -87,7 +88,7 @@ def main():
                     direction = "Entrada"
                 else:
                     direction = "Salida"
-
+                    
                 if license_plate_text is not None and vehicle_crop.size > 0:
                     if last_license_plate is not None and license_plate_text is not None:
                         similarity = similarity_percentage(last_license_plate, license_plate_text)
@@ -117,7 +118,7 @@ def main():
                     cv2.imwrite(f"photos/license_plate/{license_plate_img_name}", license_plate_crop)
 
                     http_post(license_plate_score, license_plate_img_name, vehicle_img_name,
-                              license_plate_text, direction)
+                               license_plate_text, direction)
 
         current_hour = datetime.now().hour
         current_minute = datetime.now().minute
