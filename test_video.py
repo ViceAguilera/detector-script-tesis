@@ -29,7 +29,7 @@ def main():
         print("No hay conexión con la API")
         return
 
-    cap = cv2.VideoCapture("video2.mp4")
+    cap = cv2.VideoCapture("video.mp4")
     current_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
     last_checked_hour = None
 
@@ -46,7 +46,7 @@ def main():
 
     coco_model = YOLO('model/yolov8n.pt')
 
-    license_plate_model = YOLO('model/tercer entrenamiento.pt')
+    license_plate_model = YOLO('model/best.pt')
 
     vehicles = [2, 7]
     results = {}

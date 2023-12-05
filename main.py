@@ -62,7 +62,7 @@ def main():
         raise FileNotFoundError(f'El modelo de placa de licencia no se encuentra en {license_plate_path}')
 
     coco_model = YOLO('model/yolov8n.pt')
-    license_plate_model = YOLO('model/tercer entrenamiento.pt')
+    license_plate_model = YOLO('model/best.pt')
 
     vehicles = [2, 7]
     results = {}
