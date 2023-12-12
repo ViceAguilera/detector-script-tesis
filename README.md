@@ -61,7 +61,7 @@ _Sistema de reconocimiento automático de matrículas vehiculares y API para el 
 
 8. Se instala CUDA Pytorch
     ```bash
-   pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+   pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu118
    ```
 
 9. Para el envio de datos se debe crear archivo .env, siguiendo el ejemplo de `.env.example`
@@ -110,14 +110,14 @@ _Sistema de reconocimiento automático de matrículas vehiculares y API para el 
 
 7. Se instala CUDA Pytorch
     ```bash
-   pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+   pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu118
    ```
 
 8. Para el envio de datos se debe crear archivo .env, siguiendo el ejemplo de `.env.example`
 
 10. Se solicita el token de la [API](https://github.com/camjasaez/app-tesis.git) y se agrega al archivo `.env`
 
-11. Se descarga los modelos de [Yolov8n](https://drive.google.com/file/d/192QNeCFvm4U-vIagpz0ch6JWcYaOEhG2/view?usp=sharing) y [License Plate](https://drive.google.com/file/d/1jnWNCFfGbEt28cYrH8P74t2FguwCD3vP/view?usp=sharing) y se agregan a la carpeta `model`
+11. Se descarga los modelos de [Yolov8n](https://drive.google.com/file/d/192QNeCFvm4U-vIagpz0ch6JWcYaOEhG2/view?usp=sharing) y [License Plate](https://drive.google.com/file/d/1ibWsZyQvy0bozpxPRUiaXmouR4D6egsN/view?usp=sharing) y se agregan a la carpeta `model`
 
 12. Se ejecuta el script
     ```bash
