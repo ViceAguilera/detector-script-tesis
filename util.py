@@ -26,10 +26,17 @@ def verify_api_connection():
     Returns:
         Status: True if the request was sent successfully, False otherwise.
     """
-    host = os.getenv("HOST")
-    port = os.getenv("PORT")
+    url = ""
+    host = ""
+    port = ""
 
-    url = f"http://{host}:{port}/api/status"
+    API_URL = os.getenv("API_URL")
+    if API_URL:
+        url = f"{API_URL}/api/status"
+    else:
+        host = os.getenv("HOST")
+        port = os.getenv("PORT")
+        url = f"http://{host}:{port}/api/status"
 
     try:
         response = requests.get(url, timeout=10)
@@ -57,11 +64,22 @@ def http_post(score, license_img_name, vehicle_img_name, text, direction):
     Returns:
         None
     """
-    host = os.getenv("HOST")
-    port = os.getenv("PORT")
+
+    url = ""
+    token = ""
+    host = ""
+    port = ""
+
+    API_URL = os.getenv("API_URL")
+    if API_URL:
+        url = f"{API_URL}/api/registers"
+    else:
+        host = os.getenv("HOST")
+        port = os.getenv("PORT")
+        url = f"http://{host}:{port}/api/registers"
+
     token = os.getenv("TOKEN")
 
-    url = f"http://{host}:{port}/api/registers"
     vehicle_image_encoded = encode_image_to_base64("photos/vehicles/" + vehicle_img_name)
     license_plate_image_encoded = encode_image_to_base64("photos/license_plate/" + license_img_name)
 
