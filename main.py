@@ -90,10 +90,8 @@ def main():
             license_plates = license_plate_model(frame)[0]
             for license_plate in license_plates.boxes.data.tolist():
                 x1, y1, x2, y2, score, class_id = license_plate
-                cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 0, 255), 2)
                 if score >= 0.75:
                     xvehi1, yvehi1, xvehi2, yvehi2, vehi_ids = get_vehicles(license_plate, vehicles_ids)
-                    cv2.rectangle(frame, (int(xvehi1), int(yvehi1)), (int(xvehi2), int(yvehi2)), (0, 0, 255), 2)
 
                     vehicle_crop = frame[int(yvehi1):int(yvehi2), int(xvehi1):int(xvehi2), :]
 
@@ -138,15 +136,9 @@ def main():
                 delete_files_in_directory("photos/vehicles")
                 last_checked_hour = current_hour
 
-            cv2.rectangle(frame, (mid_width, 0), (width, frame.shape[0]), (0, 0, 0), 2)
-            cv2.putText(frame, "Salida", (mid_width + 10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2)
-            cv2.rectangle(frame, (0, 0), (mid_width, frame.shape[0]), (0, 0, 0), 2)
-            cv2.putText(frame, "Entrada", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2)
-
-            frame = cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
-            cv2.imshow("video", frame)
             if cv2.waitKey(1) == ord('q'):
                 break
+
 
 if __name__ == '__main__':
     main()
