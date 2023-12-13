@@ -73,7 +73,7 @@ def http_post(score, license_img_name, vehicle_img_name, text, direction):
     token = os.getenv("TOKEN")
 
     vehicle_image_encoded = encode_image_to_base64("photos/vehicles/" + vehicle_img_name)
-    license_plate_image_encoded = encode_image_to_base64("photos/license_plate/" + license_img_name)
+    license_plate_image_encoded = "x"
 
     data = {
         "licensePlate": text,

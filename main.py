@@ -99,8 +99,10 @@ def main():
 
                     license_plate_crop = frame[int(y1):int(y2), int(x1):int(x2), :]
                     license_plate_gray = cv2.cvtColor(license_plate_crop, cv2.COLOR_BGR2GRAY)
+                    kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
+                    license_plate_sharpen = cv2.filter2D(license_plate_gray, -1, kernel)
 
-                    license_plate_text, license_plate_score = read_license_plate(license_plate_gray)
+                    license_plate_text, license_plate_score = read_license_plate(license_plate_sharpen)
 
                     if x1 < mid_width:
                         direction = "entrada"
@@ -111,8 +113,9 @@ def main():
                     if license_plate_text is not None and vehicle_crop.size > 0:
                         if last_license_plate is not None and license_plate_text is not None:
                             similarity = similarity_percentage(last_license_plate, license_plate_text)
-                            if license_plate_text == last_license_plate or similarity > 66:
+                            if license_plate_text == last_license_plate or similarity > 50:
                                 continue
+    
 
                         last_license_plate = license_plate_text
 
@@ -121,7 +124,7 @@ def main():
                         print(f"Vehículo: {direction}")
 
                         vehicle_img_name = f"vehicle_{license_plate_text}_{current_time}.jpg"
-                        vehicle_crop = cv2.resize(vehicle_crop, (0, 0), fx=0.5, fy=0.5)
+                        vehicle_crop = cv2.resize(vehicle_crop, (0, 0), fx=0.7, fy=0.7)
                         cv2.imwrite(f"photos/vehicles/{vehicle_img_name}", vehicle_crop)
 
                         license_plate_img_name = f"license_plate_{license_plate_text}_{current_time}.jpg"

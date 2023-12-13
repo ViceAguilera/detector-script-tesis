@@ -71,7 +71,7 @@ def main():
         license_plates = license_plate_model(frame)[0]
         for license_plate in license_plates.boxes.data.tolist():
             x1, y1, x2, y2, score, class_id = license_plate
-            cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 0, 255), 2)
+            #cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 0, 255), 2)
             if score >= 0.75:
                 xvehi1, yvehi1, xvehi2, yvehi2, vehi_ids = get_vehicles(license_plate, vehicles_ids)
                 cv2.rectangle(frame, (int(xvehi1), int(yvehi1)), (int(xvehi2), int(yvehi2)), (0, 0, 255), 2)
@@ -80,8 +80,10 @@ def main():
 
                 license_plate_crop = frame[int(y1):int(y2), int(x1):int(x2), :]
                 license_plate_gray = cv2.cvtColor(license_plate_crop, cv2.COLOR_BGR2GRAY)
+                kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
+                license_plate_sharpen = cv2.filter2D(license_plate_gray, -1, kernel)
 
-                license_plate_text, license_plate_score = read_license_plate(license_plate_gray)
+                license_plate_text, license_plate_score = read_license_plate(license_plate_sharpen)
 
                 if x1 < mid_width:
                     direction = "Entrada"
@@ -91,7 +93,7 @@ def main():
                 if license_plate_text is not None and vehicle_crop.size > 0:
                     if last_license_plate is not None and license_plate_text is not None:
                         similarity = similarity_percentage(last_license_plate, license_plate_text)
-                        if license_plate_text == last_license_plate or similarity > 66:
+                        if license_plate_text == last_license_plate or similarity > 45:
                             continue
 
                     last_license_plate = license_plate_text
@@ -99,7 +101,7 @@ def main():
                     print(f"Placa de licencia: {license_plate_text}")
                     print(f"Confianza: {license_plate_score}")
                     print(f"Vehículo: {direction}")
-
+     
                     vehicle_img_name = f"vehicle_{license_plate_text}_{current_time}.jpg"
                     vehicle_crop = cv2.resize(vehicle_crop, (0, 0), fx=0.5, fy=0.5)
                     cv2.imwrite(f"photos/vehicles/{vehicle_img_name}", vehicle_crop)
