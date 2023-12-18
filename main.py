@@ -115,7 +115,6 @@ def main():
                             similarity = similarity_percentage(last_license_plate, license_plate_text)
                             if license_plate_text == last_license_plate or similarity > 50:
                                 continue
-    
 
                         last_license_plate = license_plate_text
 

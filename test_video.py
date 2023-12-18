@@ -111,7 +111,7 @@ def main():
                     cv2.imwrite(f"photos/license_plate/{license_plate_img_name}", license_plate_crop)
 
                     http_post(license_plate_score, license_plate_img_name, vehicle_img_name,
-                               license_plate_text, direction)
+                              license_plate_text, direction)
 
         current_hour = datetime.now().hour
         current_minute = datetime.now().minute

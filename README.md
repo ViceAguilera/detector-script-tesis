@@ -119,9 +119,14 @@ _Sistema de reconocimiento automático de matrículas vehiculares y API para el 
 
 11. Se descarga los modelos de [Yolov8n](https://drive.google.com/file/d/192QNeCFvm4U-vIagpz0ch6JWcYaOEhG2/view?usp=sharing) y [License Plate](https://drive.google.com/file/d/1ibWsZyQvy0bozpxPRUiaXmouR4D6egsN/view?usp=sharing) y se agregan a la carpeta `model`
 
-12. Se ejecuta el script
+12. Si se tiene la cámara OAK-1 POE se debe conectar, ya sea por poe ([Configuración](https://docs.luxonis.com/projects/hardware/en/latest/pages/guides/getting-started-with-poe/#getting-started-with-oak-poe-devices)) o por usb con cable de red. 
     ```bash
     python main.py
+    ```
+    
+13. Si no se tiene la camara OAK-1 POE, puede probar la demo con vídeo.
+    ```bash
+    python test_video.py
     ```
 </details>
    
