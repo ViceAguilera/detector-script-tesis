@@ -97,8 +97,10 @@ def main():
 
                     license_plate_crop = frame[int(y1):int(y2), int(x1):int(x2), :]
                     license_plate_gray = cv2.cvtColor(license_plate_crop, cv2.COLOR_BGR2GRAY)
+                    kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
+                    license_plate_sharpen = cv2.filter2D(license_plate_gray, -1, kernel)
 
-                    license_plate_text, license_plate_score = read_license_plate(license_plate_gray)
+                    license_plate_text, license_plate_score = read_license_plate(license_plate_sharpen)
 
                     if x1 < mid_width:
                         direction = "entrada"

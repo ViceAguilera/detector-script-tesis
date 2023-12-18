@@ -78,8 +78,10 @@ def main():
 
                 license_plate_crop = frame[int(y1):int(y2), int(x1):int(x2), :]
                 license_plate_gray = cv2.cvtColor(license_plate_crop, cv2.COLOR_BGR2GRAY)
+                kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
+                license_plate_sharpen = cv2.filter2D(license_plate_gray, -1, kernel)
 
-                license_plate_text, license_plate_score = read_license_plate(license_plate_gray)
+                license_plate_text, license_plate_score = read_license_plate(license_plate_sharpen)
 
                 if x1 < mid_width:
                     direction = "Entrada"
@@ -115,11 +117,6 @@ def main():
             delete_files_in_directory("photos/license_plate")
             delete_files_in_directory("photos/vehicles")
             last_checked_hour = current_hour
-
-        cv2.rectangle(frame, (mid_width, 0), (width, frame.shape[0]), (0, 0, 0), 2)
-        cv2.putText(frame, "Salida", (mid_width + 10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2)
-        cv2.rectangle(frame, (0, 0), (mid_width, frame.shape[0]), (0, 0, 0), 2)
-        cv2.putText(frame, "Entrada", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2)
 
         if cv2.waitKey(1) == ord('q'):
             break
