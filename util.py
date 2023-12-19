@@ -14,8 +14,9 @@ load_dotenv()
 mot_tracker = Sort()
 reader = easyocr.Reader(['en'], gpu=False)
 
-dict_char_to_int = {'O': '0', 'I': '1', 'Z': '2', 'E': '3', 'A': '4',
-                    'S': '5', 'G': '6', 'T': '7', 'B': '8', 'Q': '9', 'C': '0'}
+dict_char_to_int = {'O': '0', 'D': '0', 'I': '1', 'L': '1', 'C': '0', 'Z': '2', 'E': '3',
+                    'A': '4', 'S': '5', 'G': '6', 'T': '7', 'B': '8', 'Q': '9'}
+
 dict_int_to_char = {v: k for k, v in dict_char_to_int.items()}
 
 
