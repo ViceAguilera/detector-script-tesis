@@ -9,12 +9,10 @@ from ultralytics import YOLO
 from datetime import datetime
 
 from util import (
-    http_post,
     get_vehicles,
     read_license_plate,
     delete_files_in_directory,
     similarity_percentage,
-    verify_api_connection
 )
 
 mot_tracker = Sort()
@@ -24,10 +22,6 @@ def main():
     """
     Main function of the script.
     """
-
-    if verify_api_connection() is False:
-        print("No hay conexión con la API")
-        return
 
     cap = cv2.VideoCapture("video.mp4")
     current_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
@@ -110,9 +104,6 @@ def main():
                     license_plate_crop = cv2.resize(license_plate_crop, (0, 0), fx=0.7, fy=0.7)
                     cv2.imwrite(f"photos/license_plate/{license_plate_img_name}", license_plate_crop)
 
-                    http_post(license_plate_score, license_plate_img_name, vehicle_img_name,
-                               license_plate_text, direction)
-
         current_hour = datetime.now().hour
         current_minute = datetime.now().minute
         if current_hour == 12 and current_minute == 5 and current_hour != last_checked_hour:
@@ -126,9 +117,6 @@ def main():
         cv2.putText(frame, "Entrada", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2)
 
         frame = cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
-        cv2.imshow("video", frame)
-        if cv2.waitKey(1) == ord('q'):
-            break
 
     cap.release()
     cv2.destroyAllWindows()

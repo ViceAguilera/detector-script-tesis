@@ -1,0 +1,19 @@
+# Ignorar archivos temporales o de caché
+*.pyc
+.git
+.DS_Store
+
+# Ignorar archivos de configuración o credenciales locales
+.env
+.aws
+.ssh
+
+# Ignorar archivos o directorios que no son necesarios para ejecutar el código
+README.md
+docs
+tests
+
+# Ignorar archivos o directorios que se instalan o generan dentro del contenedor
+node_modules
+venv
+build
