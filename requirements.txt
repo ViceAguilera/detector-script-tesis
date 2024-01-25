@@ -6,5 +6,4 @@ easyocr==1.7.1
 Pillow==9.5.0
 filterpy==1.4.5
 python-dotenv==1.0.0
-typing-extensions==4.3.0
 matplotlib==3.8.0
