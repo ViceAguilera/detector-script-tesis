@@ -5,12 +5,33 @@ Script de reconocimiento automático de patentes vehiculares (ANPR) para control
 ![Python](https://img.shields.io/badge/Python-3.9-3776AB?style=flat&logo=python&logoColor=white)
 ![Ultralytics](https://img.shields.io/badge/Ultralytics-YOLOv8-00FFFF?style=flat)
 ![OpenCV](https://img.shields.io/badge/OpenCV-5C3EE8?style=flat&logo=opencv&logoColor=white)
+![Estado](https://img.shields.io/badge/estado-terminado-blue?style=flat)
 ![Licencia](https://img.shields.io/badge/licencia-AGPL--3.0-blue?style=flat)
 ![Último commit](https://img.shields.io/github/last-commit/ViceAguilera/detector-script-tesis?style=flat)
 
+<!-- Demo: agrega una captura o GIF en docs/demo.gif y descomenta la línea siguiente -->
+<!-- <p align="center"><img src="docs/demo.gif" alt="Demostración del detector de patentes" width="800"></p> -->
+
+## Tabla de contenidos
+
+- [Descripción](#descripción)
+- [Estado del proyecto](#estado-del-proyecto)
+- [Características](#características)
+- [Tecnologías](#tecnologías)
+- [Requisitos](#requisitos)
+- [Instalación](#instalación)
+- [Uso](#uso)
+- [Estructura del proyecto](#estructura-del-proyecto)
+- [Licencia](#licencia)
+- [Autores](#autores)
+
 ## Descripción
 
-El script detecta vehículos y patentes en un flujo de video, rastrea los vehículos, lee el texto de la patente con OCR y determina si el vehículo entra o sale según su posición en el cuadro. Los registros (patente, confianza, dirección y fotografías) se envían a una API del proyecto de tesis. La fuente de video puede ser una cámara OAK-1 POE o un archivo de video de demostración. El proyecto está en desarrollo (versión 2.0 beta) y se realizó en colaboración con Camilo Sáez Garrido.
+El script detecta vehículos y patentes en un flujo de video, rastrea los vehículos, lee el texto de la patente con OCR y determina si el vehículo entra o sale según su posición en el cuadro. Los registros (patente, confianza, dirección y fotografías) se envían a una API del proyecto de tesis. La fuente de video puede ser una cámara OAK-1 POE o un archivo de video de demostración. Se realizó en colaboración con Camilo Sáez Garrido.
+
+## Estado del proyecto
+
+**Terminado.** Proyecto de tesis de Ingeniería de Ejecución en Computación e Informática (Universidad del Bío-Bío). La última versión publicada es la 2.0 beta y no recibe mantenimiento activo.
 
 ## Características
 
