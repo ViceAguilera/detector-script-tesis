@@ -182,3 +182,8 @@ poetry.toml
 pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python
+
+# Archivos de asistentes de IA
+.claude/
+CLAUDE.md
+AGENTS.md
